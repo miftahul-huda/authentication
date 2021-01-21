@@ -11,5 +11,5 @@ steps:
   - run
   - --filename=gke-file-authentication.yaml
   - --image=gcr.io/huda-playground/authentication:v1
-  - --location=us-central1
+  - --location=us-central1-c
   - --cluster=gke-authentication-cluster
