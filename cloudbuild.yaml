@@ -21,7 +21,7 @@ steps:
   args: ['apply', '-f', 'k8s/']
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=gke-authentication-cluster'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=gke-cluster-authentication'
 #step 4
 - name: 'gcr.io/cloud-builders/kubectl'
   args: [
@@ -33,7 +33,7 @@ steps:
   ]
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=us-central1-c'
-  - 'CLOUDSDK_CONTAINER_CLUSTER=gke-authentication-cluster'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=gke-cluster-authentication'
 # push images to Google Container Registry with tags
 images: [
    'gcr.io/$PROJECT_ID/authentication:$BRANCH_NAME-$COMMIT_SHA',
