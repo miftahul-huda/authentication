@@ -1,9 +1,9 @@
 steps:
   # build the container image
-- name: "gcr.io/cloud-builders/docker"
+- name: "build -t gcr.io/huda-playground/authentication:v1 ."
   args: ["build", "-t", "gcr.io/huda-playground/authentication:v1", "."]
   # push container image
-- name: "gcr.io/cloud-builders/docker"
+- name: "push gcr.io/huda-playground/authentication:v1"
   args: ["push", "gcr.io/huda-playground/authentication:v1"]
   # deploy container image to GKE
 - name: "gcr.io/cloud-builders/gke-deploy"
@@ -11,5 +11,5 @@ steps:
   - run
   - --filename=gke-file-authentication.yaml
   - --image=gcr.io/huda-playground/authentication:v1
-  - --location=us-central1/us-central1-c
+  - --location=us-central1
   - --cluster=gke-authentication-cluster
