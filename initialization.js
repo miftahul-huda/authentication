@@ -7,7 +7,7 @@ const LogModel  = require( './modules/models/logmodel')
 
 const { Sequelize, Model, DataTypes } = require('sequelize');
 
-import Config from './config.json';
+var Config = require('./config.json');
 
 /*const sequelize = new Sequelize({
     dialect: 'sqlite',
