@@ -1,12 +1,17 @@
+require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser')
+//const process = require('process');
+
 var Initialization = require("./initialization")
 
-const port = 8080
+
+const port = 8080;
+
 
 var ejs = require('ejs'); 
 ejs.open = '{{'; 
@@ -66,7 +71,10 @@ app.use(function(err, req, res, next) {
 
 
 app.listen(port)
-Initialization.initializeDatabase();
+
+
+
+//Initialization.initializeDatabase();
 
 console.log("Authentication server on  port : " + port)
 

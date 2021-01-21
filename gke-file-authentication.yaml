@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "3"
+  creationTimestamp: "2021-01-21T18:08:33Z"
+  generation: 7
+  labels:
+    app: authentication
+  name: authentication
+  namespace: default
+  resourceVersion: "20642"
+  selfLink: /apis/apps/v1/namespaces/default/deployments/authentication
+  uid: 9f42632b-b08b-49a2-bb98-cbf35df6832c
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: authentication
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: authentication
+    spec:
+      containers:
+      - env:
+        - name: DBHOST
+          valueFrom:
+            configMapKeyRef:
+              key: DBHOST
+              name: authentication-config-ka4i
+        - name: DBTYPE
+          valueFrom:
+            configMapKeyRef:
+              key: DBTYPE
+              name: authentication-config-ka4i
+        - name: DBNAME
+          valueFrom:
+            configMapKeyRef:
+              key: DBNAME
+              name: authentication-config-ka4i
+        - name: DBUSER
+          valueFrom:
+            configMapKeyRef:
+              key: DBUSER
+              name: authentication-config-ka4i
+        - name: DBPASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: DBPASSWORD
+              name: authentication-config-ka4i
+        - name: PORT
+          valueFrom:
+            configMapKeyRef:
+              key: PORT
+              name: authentication-config-ka4i
+        image: gcr.io/huda-playground/authentication@sha256:7476b040b4b7559b9a6da4aeda017b24840f2cb771d46c817db69425c9580a8f
+        imagePullPolicy: IfNotPresent
+        name: authentication-sha256-1
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 3
+  conditions:
+  - lastTransitionTime: "2021-01-21T18:08:33Z"
+    lastUpdateTime: "2021-01-21T18:58:56Z"
+    message: ReplicaSet "authentication-6bfb865ff8" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2021-01-21T18:59:13Z"
+    lastUpdateTime: "2021-01-21T18:59:13Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 7
+  readyReplicas: 3
+  replicas: 3
+  updatedReplicas: 3

@@ -6,8 +6,7 @@ const CountryAndCityModel  = require( './modules/models/countryandcitymodel')
 const LogModel  = require( './modules/models/logmodel')
 
 const { Sequelize, Model, DataTypes } = require('sequelize');
-
-var Config = require('./config.json');
+const process = require('process');
 
 /*const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -22,9 +21,11 @@ var Config = require('./config.json');
     }
   });*/
 
-const sequelize = new Sequelize(Config.database.name, Config.database.user, Config.database.password, {
-    host: Config.database.host,
-    dialect: Config.database.type  
+
+
+const sequelize = new Sequelize(process.env.DBNAME, process.env.DBUSER, process.env.DBPASSWORD, {
+    host: process.env.DBHOST,
+    dialect: process.env.DBTYPE  
 });
 
 class Initialization {
