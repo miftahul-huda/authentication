@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: authentication
+  name: authentication
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      run: authentication
+  template:
+    metadata:
+      labels:
+        run: authentication
+    spec:
+      containers:
+      - image: gcr.io/huda-playground/authentication:latest
+        name: authentication
+        ports:
+        - containerPort: 8080
