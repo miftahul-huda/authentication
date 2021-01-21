@@ -1,9 +1,9 @@
 steps:
   # build the container image
-- name: "build -t gcr.io/huda-playground/authentication:v1 ."
+- name: "gcr.io/cloud-builders/docker"
   args: ["build", "-t", "gcr.io/huda-playground/authentication:v1", "."]
   # push container image
-- name: "push gcr.io/huda-playground/authentication:v1"
+- name: "gcr.io/cloud-builders/docker"
   args: ["push", "gcr.io/huda-playground/authentication:v1"]
   # deploy container image to GKE
 - name: "gcr.io/cloud-builders/gke-deploy"
