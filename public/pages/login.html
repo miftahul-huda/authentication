@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header-logo.html") -%>
+
+    <div class="card-body">
+        <form>
+            <div class="position-relative form-group">
+                <div class="form-group" style="width: 100%;">
+                    <label>Application</label>
+                    <select id="cmb-apps" class="form-control select2" style="width: 100%;">
+                    </select>
+                </div>
+            </div>
+            <div class="position-relative form-group">
+                <label for="email" class="">Email</label>
+                <input id="email" placeholder="example: hudabeybi@gmail.com" type="text" class="form-control">
+            </div>
+            <div class="position-relative form-group">
+                <label for="password" class="">Password</label>
+                <input id="password" placeholder="Enter password" type="password" class="form-control">
+            </div>
+            <div class="position-relative form-group">
+                <button id="btn-login" type="button" class="btn btn-block btn-primary">Login</button>
+            </div>
+        </form>
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+    $(document).ready(function() {
+        loadApplications();
+        $("#btn-login").click(function(){
+            login();
+        })
+    });
+
+    function login()
+    {
+        var o = {};
+        o.email = $("#email").val();
+        o.password = $("#password").val();
+        o.appId = $("#cmb-apps").val();
+
+        var url = API_HOST + "/user/loginbyapp";
+        $.post(url, JSON.stringify(o), function(response){
+            if(response.success)
+            {
+               var payload = response.payload;
+               var redirectUrl = payload.app.callbackurl + "?session=" + 
+               payload.currentSessionID + "&user=" + payload.email + "&firstname=" + payload.firstname +
+               "&lastname=" + payload.lastname + "&orgname=" + payload.org.orgname + "&orginfo=" + payload.org.orginfo;
+
+               console.log(response);
+               console.log(redirectUrl);
+               location = redirectUrl;
+
+            }
+            else
+            {
+                alert(response.message);
+            }
+        })
+    }
+
+    function loadApplications()
+    {
+        $.get(API_HOST + "/application", function(response){
+            let apps = response.payload;
+        
+            $("#cmb-apps").html("");
+            apps.map(function(item){
+                $("#cmb-apps").append("<option value='" + item.id + "'>" + item.appname + "</option>")
+            });
+        });
+    }
+
+</script>
+</html>
+
+

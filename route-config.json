@@ -1,0 +1,11 @@
+[
+    { "path" :  "/", "router"  : "./routes/index" },
+    { "path" :  "/country", "router"  : "./routes/country" },
+    { "path" :  "/city", "router"  : "./routes/city" },
+    { "path" :  "/user", "router"  : "./routes/user" },
+    { "path" :  "/web", "router"  : "./routes/web" },
+    { "path" :  "/log", "router"  : "./routes/log" },
+    { "path" :  "/application", "router"  : "./routes/applications" },
+    { "path" :  "/applicationuser", "router"  : "./routes/applicationuser" },
+    { "path" :  "/organization", "router"  : "./routes/organization" }
+]

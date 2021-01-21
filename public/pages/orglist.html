@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header.html") -%>
+
+    <div class="card-body">
+        <div class="position-relative form-group">
+            <button id="btn-add" type="button" class="btn btn-block btn-primary">Add</button>
+        </div>
+        <table id="datatable"></table>
+
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+$(document).ready(function(){
+    loadOrg();
+    $("#btn-add").click(function(e){
+        location = 'registerorg'
+    });
+})
+
+var table = null;
+function loadOrg()
+{
+    var url = "/organization";
+
+    $.get(url, function(response){
+        if(response.success)
+        {
+            var orgs = response.payload;
+            console.log(orgs)
+
+            for(var i=0; i < orgs.length; i++)
+            {
+                orgs[i].delete = "<div style='cursor: pointer' onclick='deleteOrg(" + orgs[i].id + ")'>x</div>"
+            }
+
+            if(table != null)
+                table.destroy();
+
+            table = $("#datatable").DataTable({
+                data: orgs,
+                columns: [
+                    { title: "Name", data:"orgname"},
+                    { title: "Info", data: "orginfo"},
+                    { title: '' , data: "delete"}
+                ]
+            })
+        }
+        else{
+            alert(response.error);
+        }
+    });    
+}
+
+
+function deleteOrg(i)
+{
+
+    var url = "/organization/delete/" + i;
+    $.get(url,  function(response){
+        if(response.success)
+        {
+            loadOrg();
+        }
+        else{
+            alert(response.error);
+        }
+    });
+}
+
+</script>
+</html>
+
+

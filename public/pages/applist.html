@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header.html") -%>
+
+    <div class="card-body">
+        <div class="position-relative form-group">
+            <button id="btn-add" type="button" class="btn btn-block btn-primary">Add</button>
+        </div>
+        <table id="datatable"></table>
+
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+$(document).ready(function(){
+    loadApp();
+    $("#btn-add").click(function(e){
+        location = 'registerapp'
+    });
+})
+
+var table = null;
+function loadApp()
+{
+    var url = "/application";
+
+    $.get(url, function(response){
+        if(response.success)
+        {
+            var apps = response.payload;
+            console.log(apps)
+
+            for(var i=0; i < apps.length; i++)
+            {
+                apps[i].delete = "<div style='cursor: pointer' onclick='deleteApp(" + apps[i].id + ")'>x</div>"
+            }
+
+            if(table != null)
+                table.destroy();
+
+            table = $("#datatable").DataTable({
+                data: apps,
+                columns: [
+                    { title: "Name", data:"appname"},
+                    { title: "Info", data: "appdescription"},
+                    { title: "Url", data: "appurl"},
+                    { title: "Callback", data: "callbackurl"},
+                    { title: '' , data: "delete"}
+                ]
+            })
+        }
+        else{
+            alert(response.error);
+        }
+    });    
+}
+
+
+function deleteApp(i)
+{
+
+    var url = "/application/delete/" + i;
+    $.get(url,  function(response){
+        if(response.success)
+        {
+            loadApp();
+        }
+        else{
+            alert(response.error);
+        }
+    });
+}
+
+</script>
+</html>
+
+

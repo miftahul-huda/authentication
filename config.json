@@ -1,0 +1,11 @@
+{
+    "database" : {
+        "type" : "postgresql",
+        "host" : "34.101.132.209",
+        "name" : "authentication",
+        "user" : "nodeuser",
+        "password" : "rotikeju98"
+    }
+    ,
+    "port" : 8080
+}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header.html") -%>
+
+    <div class="card-body">
+        <form>
+            <div class="position-relative form-group">
+                <label for="orgname" class="">Organization name</label>
+                <input id="orgname" placeholder="example : My Organization" type="text" class="form-control">
+            </div>
+            <div class="position-relative form-group">
+                <label for="orginfo" class="">Info</label>
+                <input id="orginfo" placeholder="Enter information about organization" type="text" class="form-control">
+            </div>
+            <div class="position-relative form-group">
+                <button id="btn-register" type="button" class="btn btn-block btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+    $(document).ready(function() {
+
+        $("#btn-register").click(function(){
+            registerOrg();
+        })
+    });
+
+    function registerOrg()
+    {
+        var o = {};
+        o.orgname = $("#orgname").val();
+        o.orginfo = $("#orginfo").val();
+
+        console.log(JSON.stringify(o));
+
+        var url = API_HOST + "/organization/create";
+        $.post(url, JSON.stringify(o), function(response){
+            if(response.success)
+            {
+                alert("Organization has been registered");
+                $("input").val("");
+                $("textarea").val("");
+
+            }
+            else
+            {
+                alert(response.message);
+            }
+        })
+    }
+
+</script>
+</html>
+
+

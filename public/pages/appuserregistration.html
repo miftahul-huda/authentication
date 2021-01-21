@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header.html") -%>
+
+    <div class="card-body">
+        <form>
+            <div class="position-relative form-group" style="display: flex;">
+                <div class="form-group" style="width: 100%;">
+                    <label>Application</label>
+                    <div style="width: 100%; display: flex">
+                        <select id="cmb-apps" class="form-control select2" style="width: 95%;">
+                        </select>
+                        &nbsp;
+                        <div style="cursor: pointer; width: 5%; background-color: #ccc; border: solid 1px #ccc; text-align: center; line-height: 2" onclick="deleteApp()">X</div>
+                    </div>
+                </div>
+            </div>
+            <div class="position-relative form-group" style="display: flex;">
+                <div class="form-group" style="width: 100%;">
+                    <label>Users</label>
+                    <div style="width: 100%; display: flex">
+                        <select id="cmb-users" class="form-control select2" style="width: 95%;">
+                        </select>
+                        &nbsp;
+                        <div style="cursor: pointer; width: 5%; background-color: #ccc; border: solid 1px #ccc; text-align: center; line-height: 2" onclick="deleteUser()">X</div>
+                    </div>
+                </div>
+            </div>
+            <div class="position-relative form-group">
+                <button id="btn-register" type="button" class="btn btn-block btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+    $(document).ready(function() {
+        loadApplications();
+        loadUsers();
+
+        $("#btn-register").click(function(){
+            registerAppUser();
+        })
+    });
+
+    function registerAppUser()
+    {
+        var o = {};
+        o.appid = $("#cmb-apps").val();
+        o.userid = $("#cmb-users").val();
+
+        console.log(JSON.stringify(o));
+
+        var url = API_HOST + "/applicationuser/register";
+        $.post(url, JSON.stringify(o), function(response){
+            if(response.success)
+            {
+                alert("Application user has been registered");
+                $("select").val("");
+
+            }
+            else
+            {
+                alert(response.message);
+            }
+        })
+    }
+
+function loadApplications()
+{
+    $.get(API_HOST + "/application", function(response){
+        let apps = response.payload;
+      
+        $("#cmb-apps").html("");
+        apps.map(function(item){
+            $("#cmb-apps").append("<option value='" + item.id + "'>" + item.appname + "</option>")
+        });
+    });
+}
+
+function loadUsers()
+{
+    $.get(API_HOST + "/user", function(response){
+        let users = response.payload;
+      
+        $("#cmb-users").html("");
+        users.map(function(item){
+            $("#cmb-users").append("<option value='" + item.id + "'>" + item.firstname + " " + item.lastname  + "</option>")
+        });
+    });
+}
+
+function deleteApp()
+{
+    let appId = $('#cmb-apps').val();
+    $.get(API_HOST + "/application/delete/" + appId, function(response){
+        if(response.success)
+        {
+            loadApplications();
+        }
+        else
+        {
+            alert(response.message)
+        }
+    });
+}
+
+function deleteUser()
+{
+    let userId = $('#cmb-users').val();
+    $.get(API_HOST + "/user/delete/" + userId, function(response){
+        if(response.success)
+        {
+            loadUsers();
+        }
+        else
+        {
+            alert(response.message)
+        }
+    });
+}
+
+</script>
+</html>
+
+

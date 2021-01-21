@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<%- include ("./headerscript.html") -%>
+</head>
+<body>
+<%- include ("./header.html") -%>
+
+    <div class="card-body">
+        <div class="position-relative form-group">
+            <button id="btn-add" type="button" class="btn btn-block btn-primary">Add</button>
+        </div>
+        <table id="datatable"></table>
+
+    </div>
+
+<%- include ("./footer.html") -%>
+</body>
+
+<script>
+$(document).ready(function(){
+    loadUser();
+    $("#btn-add").click(function(e){
+        location = 'registeruser'
+    });
+})
+
+var table = null;
+function loadUser()
+{
+    var url = "/user";
+
+    $.get(url, function(response){
+        if(response.success)
+        {
+            var users = response.payload;
+            console.log(users)
+
+            for(var i=0; i < users.length; i++)
+            {
+                users[i].delete = "<div style='cursor: pointer' onclick='deleteUser(" + users[i].id + ")'>x</div>"
+            }
+
+            if(table != null)
+                table.destroy();
+
+            table = $("#datatable").DataTable({
+                data: users,
+                columns: [
+                    { title: "First name", data:"firstname"},
+                    { title: "Last name", data: "lastname"},
+                    { title: "Email", data: "email"},
+                    { title: '' , data: "delete"}
+                ]
+            })
+        }
+        else{
+            alert(response.error);
+        }
+    });    
+}
+
+
+function deleteUser(i)
+{
+
+    var url = "/user/delete/" + i;
+    $.get(url,  function(response){
+        if(response.success)
+        {
+            loadUser();
+        }
+        else{
+            alert(response.error);
+        }
+    });
+}
+
+</script>
+</html>
+
+
