@@ -8,24 +8,12 @@ const LogModel  = require( './modules/models/logmodel')
 const { Sequelize, Model, DataTypes } = require('sequelize');
 const process = require('process');
 
-/*const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: './database/authentication.sqlite'
-});*/
-
-/*const sequelize = new Sequelize('authentication', 'nodeuser', 'rotikeju98', {
-    host: '/cloudsql/mind-id-mct-dev:asia-southeast2:authentication-uploader',
-    dialect: 'postgres',
-    dialectOptions: {
-        socketPath: '/cloudsql/mind-id-mct-dev:asia-southeast2:authentication-uploader'
-    }
-  });*/
 
 
 
-const sequelize = new Sequelize(process.env.DBNAME, process.env.DBUSER, process.env.DBPASSWORD, {
-    host: process.env.DBHOST,
-    dialect: process.env.DBTYPE  
+const sequelize = new Sequelize("authentication", "<dbuser>", "<dbpassword>", {
+    host: "dbhost",
+    dialect: "postgresql"  
 });
 
 class Initialization {
