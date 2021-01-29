@@ -94,16 +94,13 @@ Return Example:
  
 4. To create organization
 
-POST /organization/create
+    POST /organization/create
 
 Example of POST body
 
     {
-	     "id": 1,
          "orgname": "IPR",
-         "orginfo": "IPR",
-         "createdAt": "2021-01-20T17:31:13.492Z",
-         "updatedAt": "2021-01-20T17:31:13.492Z"
+         "orginfo": "IPR"
      }
 
 
