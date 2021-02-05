@@ -33,6 +33,7 @@ router.get('/', function (req, res){
         res.send(users);
     }).catch(function (err){
         console.log("error")
+        console.log(err);
         res.send(err);
     })
 })

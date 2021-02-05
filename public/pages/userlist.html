@@ -29,6 +29,7 @@ var table = null;
 function loadUser()
 {
     var url = "/user";
+    console.log(url);
 
     $.get(url, function(response){
         if(response.success)
@@ -55,7 +56,7 @@ function loadUser()
             })
         }
         else{
-            alert(response.error);
+            alert(JSON.stringify(response));
         }
     });    
 }

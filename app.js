@@ -10,7 +10,7 @@ var bodyParser = require('body-parser')
 var Initialization = require("./initialization")
 
 
-const port = 8080;
+const port = process.env.PORT;
 
 
 var ejs = require('ejs'); 
@@ -74,7 +74,7 @@ app.listen(port)
 
 
 
-//Initialization.initializeDatabase();
+Initialization.initializeDatabase();
 
 console.log("Authentication server on  port : " + port)
 

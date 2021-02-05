@@ -1,3 +1,0 @@
-service: authentication-v2
-runtime: nodejs12
-env: standard
