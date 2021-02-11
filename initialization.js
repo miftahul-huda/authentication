@@ -16,6 +16,16 @@ const sequelize = new Sequelize(process.env.DBNAME, process.env.DBUSER, process.
     dialect: "postgresql"  
 });
 
+/*
+const sequelize = new Sequelize(process.env.DBNAME, process.env.DBUSER, process.env.DBPASSWORD, {
+    dialect: 'postgresql',
+    host: '/cloudsql/' + process.env.CLOUD_SQL_CONNECTION_NAME,
+    dialectOptions: {
+        socketPath: '/cloudsql/' + process.env.CLOUD_SQL_CONNECTION_NAME
+  },
+});
+*/
+
 class Initialization {
     static async initializeDatabase(){
 
