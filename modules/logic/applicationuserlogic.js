@@ -89,6 +89,44 @@ class ApplicationUserLogic {
         }
     }
 
+    static async deleteByUserId( userId)
+    {
+        try{
+            let apps  = await UserApplicationModel.destroy({
+                where: {
+
+                        userid : userId
+                        
+                }
+            });
+
+            return { success: true, payload: apps }
+        }
+        catch (error)
+        {
+            throw { success: false, message: '', error: error };
+        }
+    }
+
+    static async deleteByAppId( appId)
+    {
+        try{
+            let apps  = await UserApplicationModel.destroy({
+                where: {
+
+                        appId : appId
+                        
+                }
+            });
+
+            return { success: true, payload: apps }
+        }
+        catch (error)
+        {
+            throw { success: false, message: '', error: error };
+        }
+    }
+
     static async deleteAll()
     {
         try{

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const UserLogic = require('../modules/logic/userlogic')
+const ApplicationUserLogic = require('../modules/logic/applicationuserlogic')
 
 
 router.post('/register', function (req, res){
@@ -117,15 +118,24 @@ router.post('/update/:id', function (req, res){
 router.get('/delete/:id', function (req, res){
   let id = req.params.id;
 
-  UserLogic.delete(id).then(function (result)
-  {
-    res.send(result);
+  ApplicationUserLogic.deleteByUserId(id).then(function (response){
+    UserLogic.delete(id).then(function (result)
+    {
+      res.send(result);
+    }).catch(function (err){
+      console.log("error")
+      console.log(err)
+      res.send(JSON.stringify(err));
+    })
   }).catch(function (err){
     console.log("error")
     console.log(err)
-    res.send(err);
+    res.send(JSON.stringify(err));
   })
+
+
 })
+
 
 router.get('/session/:sessionid', function (req, res){
   let sessionId = req.params.sessionid;
