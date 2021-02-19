@@ -5,7 +5,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser')
-//const process = require('process');
+const session = require('express-session');
+const {Datastore} = require('@google-cloud/datastore');
+const {DatastoreStore} = require('@google-cloud/connect-datastore');
 
 var Initialization = require("./initialization")
 
@@ -24,6 +26,13 @@ var app = express();
 app.use(express.json({type: '*/*'}));
 // parse application/json
 app.use(bodyParser.json())
+
+app.use(session({
+  store: new DatastoreStore({
+    dataset: new Datastore(),
+    kind: 'express-sessions',
+  }),
+  secret: 'authentication',saveUninitialized: true,resave: false}));
 
 //Dynamic routing based on configuration
 const fs = require('fs');

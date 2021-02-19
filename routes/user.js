@@ -78,9 +78,11 @@ router.post('/login', function (req, res){
 
 router.post('/loginbyapp', function (req, res){
   let user = req.body;
+  let appSession = req.session;
 
   UserLogic.loginByApp(user.email, user.password, user.appId).then(function (saveduser)
   {
+    appSession.loggedInUser = saveduser.payload;
     res.send(saveduser);
   }).catch(function (err){
     console.log("error")
@@ -92,9 +94,11 @@ router.post('/loginbyapp', function (req, res){
 
 router.post('/loginbyemail', function (req, res){
   let user = req.body;
+  let appSession = req.session;
 
   UserLogic.loginByEmail(user.email).then(function (saveduser)
   {
+    appSession.loggedInUser = saveduser.payload;
     res.send(saveduser);
   }).catch(function (err){
     console.log("error")

@@ -16,7 +16,8 @@ class UserModel extends Model {
             lastLogin: DataTypes.STRING,
             currentSessionID: DataTypes.STRING,
             sessionExpiredDate: DataTypes.STRING,
-            orgId: DataTypes.INTEGER
+            orgId: DataTypes.INTEGER,
+            isadmin: DataTypes.INTEGER
 
         }, 
         { sequelize, modelName: 'user', tableName: 'user', force: force });

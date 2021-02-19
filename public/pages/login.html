@@ -44,6 +44,11 @@
 
     function login()
     {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const admin = urlParams.get('admin');
+        const page = urlParams.get('page');
+
         var o = {};
         o.email = $("#email").val();
         o.password = $("#password").val();
@@ -54,13 +59,26 @@
             if(response.success)
             {
                var payload = response.payload;
-               var redirectUrl = payload.app.callbackurl + "?session=" + 
-               payload.currentSessionID + "&user=" + payload.email + "&firstname=" + payload.firstname +
-               "&lastname=" + payload.lastname + "&orgname=" + payload.org.orgname + "&orginfo=" + payload.org.orginfo;
 
-               console.log(response);
-               console.log(redirectUrl);
-               location = redirectUrl;
+               if(admin != 1 )
+               {
+                    var redirectUrl = payload.app.callbackurl + "?session=" + 
+                    payload.currentSessionID + "&user=" + payload.email + "&firstname=" + payload.firstname +
+                    "&lastname=" + payload.lastname + "&orgname=" + payload.org.orgname + "&orginfo=" + payload.org.orginfo;
+
+                    console.log(response);
+                    console.log(redirectUrl);
+                    location = redirectUrl;
+               }
+               else {
+
+                if(response.payload.email != null && response.payload.isadmin == 1)
+                   location = page;
+                else {
+                    alert("User or password is invalid or not an administrator")
+                }
+
+               }
 
             }
             else
