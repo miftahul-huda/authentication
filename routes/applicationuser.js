@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const ApplicationUserLogic = require('../modules/logic/applicationuserlogic')
-
+const Formatter = require('../modules/util/formatter')
 
 
 router.post('/register', function (req, res){
@@ -11,6 +11,7 @@ router.post('/register', function (req, res){
 
   ApplicationUserLogic.register(appUser).then(function (savedappUser)
   {
+    savedappUser = Formatter.removeXSS(savedappUser);
     res.send(savedappUser);
   }).catch(function (err){
     console.log("error")
@@ -25,6 +26,7 @@ router.get('/delete/:appId/:userId', function (req, res){
 
   ApplicationUserLogic.delete(appId, userId).then(function (result)
   {
+    result = Formatter.removeXSS(result);
     res.send(result);
   }).catch(function (err){
     console.log("error")

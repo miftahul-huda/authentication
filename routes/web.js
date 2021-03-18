@@ -31,6 +31,7 @@ router.get('/userlist', function (req, res){
     {
         var dir = __dirname;
         var p = path.resolve( dir, "../public/pages/", "userlist");
+        res.setHeader('X-XSS-Protection', '1');
         res.render(p )
     }
     else

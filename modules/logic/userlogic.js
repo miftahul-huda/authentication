@@ -11,6 +11,8 @@ const sequelize = new Sequelize({
     storage: './database/authentication.sqlite'
 });
 
+const Formatter = require("../util/formatter");
+
 class UserLogic {
 
     static clear(user){
@@ -37,6 +39,7 @@ class UserLogic {
             let user = (users.length  > 0) ?  users[0] : null;
             if(user != null)
             {
+                user = JSON.parse(JSON.stringify(user));
                 delete user.password;
                 return { success: true, payload: user }
             }
@@ -65,6 +68,7 @@ class UserLogic {
                 include: CountryAndCityModel
             });
             let user = (users.length  > 0) ?  users[0] : {};
+            user = JSON.parse(JSON.stringify(user));
             delete user.password;
             console.log(user);
             
@@ -85,7 +89,7 @@ class UserLogic {
                     user.app = app;
                     let org = await OrganizationModel.findByPk(user.orgId);
                     user.org = org;
-                    delete user.password;
+              
                     console.log("loginByApp");
                     console.log(user);
                     var currentSessionID = this.createSessionId(10);
@@ -116,6 +120,8 @@ class UserLogic {
                 return { success: false, payload: null, message: 'User not found' }
         }
         catch (e){
+            console.log("ERROR loginByApp")
+            console.log(e);
             throw { success: false, message: e.message, error: e };
         }
     }
@@ -169,6 +175,9 @@ class UserLogic {
 
                     user.currentSessionID = currentSessionID;
                     user.sessionExpiredDate = expiredDate;
+
+                    user = JSON.parse(JSON.stringify(user));
+                    delete user.password;
 
                     return { success: true, payload: user }
                 }
@@ -227,36 +236,48 @@ class UserLogic {
 
     static async register(user)
     {
-        let result = this.validateCreate(user);
-        console.log(result)
-        if(result.success){
-            try {
-                delete user.retypePassword;
-                user.createdAt = new Date();
-                let newUser = await UserModel.create(user);
-                console.log(newUser);
-                //newUser = this.clear(user)
-                result.payload = newUser;
-                return  result;
+
+            let result = await this.validateCreate(user);
+            console.log(result)
+            if(result.success){
+                try {
+                    delete user.retypePassword;
+                    user.createdAt = new Date();
+                    let newUser = await UserModel.create(user);
+                    console.log(newUser);
+    
+                    newUser = JSON.parse(JSON.stringify(newUser));
+                    delete newUser.password;
+                    //newUser = this.clear(user)
+                    result.payload = newUser;
+                    return result;
+                }
+                catch(error)
+                {
+                    console.log(error)
+                    return { success: false, message: '', error: error };
+                }
+                
             }
-            catch(error)
+            else
             {
-                console.log(error)
-                throw { success: false, message: '', error: error };
+                return result;
             }
-            
-        }
-        else
-        {
-            throw result
-        }
+
 
     }
 
     static async findAll()
     {
         try{
-            let users  = await UserModel.findAll()
+            let users  = await UserModel.findAll();
+
+            users = JSON.parse(JSON.stringify(users));
+            for(var i = 0; i < users.length; i++)
+            {
+                delete users[i].password;
+            }
+
             return { success: true, payload: users }
         }
         catch (error)
@@ -278,6 +299,12 @@ class UserLogic {
 
                 }
             })
+
+            users = JSON.parse(JSON.stringify(users));
+            for(var i = 0; i < users.length; i++)
+            {
+                delete users[i].password;
+            }
             return { success: true, payload: users }
         }
         catch (error)
@@ -290,6 +317,9 @@ class UserLogic {
     {
         try{
             let user  = await UserModel.findByPk(id, { include: CountryAndCityModel } );
+
+            user = JSON.parse(JSON.stringify(user));
+            delete user.password;
             return { success: true, payload: user }
         }
         catch (error)
@@ -311,14 +341,28 @@ class UserLogic {
             if (users.length > 0)
             {
                 user = users[0];
+                user = JSON.parse(JSON.stringify(user));
+                delete user.password;
+
+                let organizations = await OrganizationModel.findAll({
+                    where:{
+                        id: user.orgId
+                    }    
+                })
+
+                if(organizations.length  >  0)
+                {
+                    user.organization = organizations[0];
+                }
+
                 let dt1 = new Date(user.sessionExpiredDate);
                 let dtNow = new Date();
                 if(dt1 >= dtNow)
                 {
-                    return { success: true, payload: { valid : false } }
+                    return { success: true, payload: { valid : true, user: user } }
                 }
                 else {
-                    return { success: true, payload: { valid : true } }
+                    return { success: true, payload: { valid : false, user: user } }
                 }
             }
             else
@@ -342,6 +386,10 @@ class UserLogic {
             try {
                 let newUser = await UserModel.update(user, { where:  { id: id }  });
                 newUser =  { username: newUser.username, firstname: newUser.firstname, lastname: newUser.lastname,  mail: newUser.mail, id: newUser.id }
+                
+                newUser = JSON.parse(JSON.stringify(newUser));
+                delete newUser.password;
+                
                 result.payload = newUser;
                 return  result;
             }
@@ -372,23 +420,37 @@ class UserLogic {
         }
     }
 
-    static validateCreate(user){
+    static async validateCreate(user){
         if(user.password == null || user.password.length ==  0)
             return {success :  false, message: "Password cannot be empty"}
 
         if(user.password !=  user.retypePassword)
             return {success :  false, message: "Password and retype password is different"}
         
-        return this.validate(user);
+        let result = await this.validate(user);
+        return result;
     }
 
-    static validate(user)
+    static async validate(user)
     {
+        let res = Formatter.checkXSS(user);
+        if(res == true)
+            return { success: false, message: "No script is allowed"}
 
         if(user.firstname == null  || user.firstname.length == 0)
             return {success :  false, message: "First name cannot be empty"}
         else if(user.email == null  || user.email.length == 0)
             return {success :  false, message: "Email cannot be empty"}
+        
+        let oldUser = await UserModel.findAll({
+            where: {
+                email : user.email
+            }
+        });
+
+        if(oldUser.length > 0)
+            return {success: false, message: "Username is already registered"}
+
         
         return {success :  true, message: "Succesfull"}
     }

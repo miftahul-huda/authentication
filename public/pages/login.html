@@ -55,6 +55,8 @@
         o.appId = $("#cmb-apps").val();
 
         var url = API_HOST + "/user/loginbyapp";
+        console.log(url);
+        console.log(o);
         $.post(url, JSON.stringify(o), function(response){
             if(response.success)
             {
@@ -83,6 +85,8 @@
             }
             else
             {
+                console.log("Response success false : ")
+                console.log(response);
                 alert(response.message);
             }
         })

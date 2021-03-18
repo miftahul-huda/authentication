@@ -3,6 +3,7 @@ var router = express.Router();
 
 const ApplicationLogic = require('../modules/logic/applicationlogic')
 const ApplicationUserLogic = require('../modules/logic/applicationuserlogic')
+const Formatter = require('../modules/util/formatter')
 
 
 router.post('/register', function (req, res){
@@ -11,6 +12,7 @@ router.post('/register', function (req, res){
 
   ApplicationLogic.register(application).then(function (savedApplication)
   {
+    savedApplication = Formatter.removeXSS(savedApplication);
     res.send(savedApplication);
   }).catch(function (err){
     console.log("error")
@@ -22,10 +24,13 @@ router.get('/', function (req, res){
 
   ApplicationLogic.findAll().then(function (applications)
   {
+    //console.log(applications)
+    applications = Formatter.removeXSS(applications);
     
     res.send(applications);
   }).catch(function (err){
     console.log("error")
+    console.log(err);
     res.send(err);
   })
 })
@@ -35,6 +40,7 @@ router.post('/', function (req, res){
 
   ApplicationLogic.findAll(search).then(function (savedApplication)
   {
+    savedApplication = Formatter.removeXSS(savedApplication);
     res.send(savedApplication);
   }).catch(function (err){
     console.log("error")
@@ -47,6 +53,7 @@ router.get('/get/:id', function (req, res){
 
   ApplicationLogic.get(id).then(function (application)
   {
+    application = Formatter.removeXSS(application);
     res.send(application);
   }).catch(function (err){
     console.log("error")
@@ -60,6 +67,7 @@ router.post('/update/:id', function (req, res){
 
   ApplicationLogic.update(id, application).then(function (savedApplication)
   {
+    savedApplication = Formatter.removeXSS(savedApplication);
     res.send(savedApplication);
   }).catch(function (err){
     console.log("error")
@@ -72,6 +80,7 @@ router.get('/delete/:id', function (req, res){
 
   ApplicationLogic.delete(id).then(function (result)
   {
+    result = Formatter.removeXSS(result);
     res.send(result);
   }).catch(function (err){
     console.log("error")
@@ -84,6 +93,7 @@ router.get('/deleteall', function (req, res){
 
   ApplicationUserLogic.deleteAll().then(function (result)
   {
+    result = Formatter.removeXSS(result);
     res.send(result);
   }).catch(function (err){
     console.log("error")

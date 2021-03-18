@@ -7,6 +7,8 @@ const sequelize = new Sequelize({
     storage: './database/authentication.sqlite'
 });
 
+const Formatter = require("../util/formatter");
+
 class LogLogic {
 
     static async create(log)
@@ -123,6 +125,9 @@ class LogLogic {
 
     static validate(log)
     {   
+        let res = Formatter.checkXSS(log);
+        if(res == true)
+            return { success: false, message: "No script is allowed"}
         return {success :  true, message: "Succesfull"}
     }
 }

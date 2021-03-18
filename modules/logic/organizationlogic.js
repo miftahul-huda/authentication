@@ -6,6 +6,7 @@ const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: './database/authentication.sqlite'
 });
+const Formatter = require("../util/formatter");
 
 class OrganizationLogic {
 
@@ -122,6 +123,9 @@ class OrganizationLogic {
 
     static validate(org)
     {   
+        let res = Formatter.checkXSS(org);
+        if(res == true)
+            return { success: false, message: "No script is allowed"}
         return {success :  true, message: "Succesfull"}
     }
 }

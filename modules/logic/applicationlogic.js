@@ -7,11 +7,13 @@ const sequelize = new Sequelize({
     storage: './database/authentication.sqlite'
 });
 
+const Formatter = require("../util/formatter");
+
 class ApplicationLogic {
 
     static async register(app)
     {
-        let result = this.successateCreate(app);
+        let result = this.validate(app);
         if(result.success){
             try {
                 app.createdAt = new Date();
@@ -82,7 +84,7 @@ class ApplicationLogic {
 
     static async update(id,  app)
     {
-        let result = this.successate(app);
+        let result = this.validate(app);
         console.log(id)
         if(result.success){
             try {
@@ -126,8 +128,12 @@ class ApplicationLogic {
         return this.successate(app);
     }
 
-    static successate(app)
+    static validate(app)
     {   
+        let res = Formatter.checkXSS(app);
+        if(res == true)
+            return { success: false, message: "No script is allowed"}
+        
         return {success :  true, message: "Succesfull"}
     }
 }

@@ -8,12 +8,14 @@ const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: './database/authentication.sqlite'
 });
+const Formatter = require("../util/formatter");
 
 class ApplicationUserLogic {
 
     static async register(appUser)
     {
-        let result = { success: true }
+        let result = this.validate(appUser);
+
         if(result.success){
             try {
                 appUser.createdAt = new Date();
@@ -152,6 +154,14 @@ class ApplicationUserLogic {
             console.log(error);
             throw { success: false, message: '', error: error };
         }
+    }
+
+    static validate(appuser)
+    {
+        let res = Formatter.checkXSS(appuser);
+        if(res == true)
+            return { success: false, message: "No script is allowed"};
+        return { success: true}
     }
 }
 
