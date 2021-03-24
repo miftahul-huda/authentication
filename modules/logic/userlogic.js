@@ -131,9 +131,7 @@ class UserLogic {
             let users = await UserModel.findAll({
                 where:
                 {
-                    [Op.and] : [
-                        { email: { [Op.like] : email  }}
-                    ]
+                    email: { [Op.like] : email  }
                 }
                 ,
                 raw: true
@@ -182,7 +180,7 @@ class UserLogic {
                     return { success: true, payload: user }
                 }
                 else 
-                    return { success: false, payload: null,  message: 'No user for the app' }
+                    return { success: false, payload: null,  message: 'User has no organization' }
             }
             else
                 return { success: false, payload: null, message: 'User not found' }
@@ -270,7 +268,7 @@ class UserLogic {
     static async findAll()
     {
         try{
-            let users  = await UserModel.findAll();
+            let users  = await UserModel.findAll({ include: OrganizationModel });
 
             users = JSON.parse(JSON.stringify(users));
             for(var i = 0; i < users.length; i++)
@@ -298,6 +296,8 @@ class UserLogic {
                     ]
 
                 }
+                ,
+                include: OrganizationModel
             })
 
             users = JSON.parse(JSON.stringify(users));

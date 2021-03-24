@@ -109,6 +109,9 @@ router.post('/login', function (req, res){
 router.post('/loginbyapp', function (req, res){
     let user = req.body;
     let appSession = req.session;
+
+    console.log("loginbyapp --- " + JSON.stringify(user));
+
     UserLogic.loginByApp(user.email, user.password, user.appId).then(function (saveduser)
     {
       appSession.loggedInUser = saveduser.payload;
