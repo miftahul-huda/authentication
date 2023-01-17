@@ -30,7 +30,8 @@ class UserLogic {
                 {
                     [Op.and] : [
                         { email: { [Op.like] : email  }},
-                        { password: { [Op.like] : password  }}
+                        { password: { [Op.like] : password  }},
+                        { isActive: 1 }
                     ]
                 }
                 ,
