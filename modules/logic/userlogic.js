@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 const UserApplicationModel = require('../models/userapplicationmodel');
 const ApplicationModel = require('../models/applicationmodel');
 const OrganizationModel = require('../models/organizationmodel');
+var jwt = require('jsonwebtoken');
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -25,27 +26,63 @@ class UserLogic {
 
     static async login(email, password){
         try{
+            email = email.trim();
+            password = password.trim();
+
+            let user = null;
+
+            let message = "";
+
             let users = await UserModel.findAll({
                 where:
                 {
                     [Op.and] : [
                         { email: { [Op.like] : email  }},
-                        { password: { [Op.like] : password  }},
-                        { isActive: 1 }
+                        { password: { [Op.like] : password  }}
                     ]
                 }
                 ,
                 include: [ CountryAndCityModel, OrganizationModel]
             });
-            let user = (users.length  > 0) ?  users[0] : null;
+
+            if(users.length == 0)
+            {
+                message = "Username atau password salah. Perhatikan huruf besar dan kecil username dan passwordnya."
+            }
+            else
+            {
+
+                for(var i =0; i < users.length; i++)
+                {
+                    let userItem = users[i];
+                    if(userItem.isActive == 1)
+                    {
+                        message = "";
+                        user = userItem;
+                        break;
+                    }
+                    else 
+                    {
+                        message = "Pengguna sudah dihapus atas permintaan. Hubungi penanggung jawab survey.";
+                        user = null;
+                    }
+                }
+                
+            }
+
             if(user != null)
             {
+
                 user = JSON.parse(JSON.stringify(user));
                 delete user.password;
+
+                let token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' });
+                user.token = token;
+                  
                 return { success: true, payload: user }
             }
             else {
-                return { success: false, payload: user, message: "Username tidak terdaftar, atau password salah" }
+                return { success: false, payload: user, message: message }
             }
         }
         catch (e){

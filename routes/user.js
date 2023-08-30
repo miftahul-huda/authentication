@@ -102,6 +102,7 @@ router.post('/login', function (req, res){
       res.send(saveduser);
     }).catch(function (err){
       console.log("error")
+      console.log(err)
       res.send(err);
     })
 })
