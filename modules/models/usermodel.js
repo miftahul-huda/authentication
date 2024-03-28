@@ -24,7 +24,8 @@ class UserModel extends Model {
             regional: DataTypes.STRING,
             branch: DataTypes.STRING,
             CLUSTER: DataTypes.STRING,
-            sfcode: DataTypes.STRING
+            sfcode: DataTypes.STRING,
+            archetype: DataTypes.STRING,
 
         }, 
         { sequelize, modelName: 'user', tableName: 'user', force: force });
