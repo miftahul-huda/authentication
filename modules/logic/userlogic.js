@@ -72,6 +72,24 @@ class UserLogic {
 
             if(user != null)
             {
+                try
+                {
+                    let lastLogin = this.getTodayDate();
+                
+                    await UserModel.update({
+                        lastLogin: lastLogin 
+                    }, {
+                        where: {
+                            id: user.id
+                        }
+                    })
+
+                }
+                catch(e)
+                {
+                    
+                }
+
 
                 user = JSON.parse(JSON.stringify(user));
                 delete user.password;
