@@ -41,9 +41,9 @@ class UserLogic {
                         { password: { [Op.like] : password  }}
                     ]
                 }
-                ,
-                include: [ CountryAndCityModel, OrganizationModel]
             });
+
+            console.log(users)
 
             if(users.length == 0)
             {

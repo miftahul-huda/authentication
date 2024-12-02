@@ -44,9 +44,9 @@ class Initialization {
 
         OrganizationModel.initialize(sequelize, force);
  
-        UserModel.belongsTo(CountryAndCityModel, { foreignKey: 'cityId' })
+        //UserModel.belongsTo(CountryAndCityModel, { foreignKey: 'cityId' })
 
-        UserModel.belongsTo(OrganizationModel, { foreignKey: 'orgId' })
+        //UserModel.belongsTo(OrganizationModel, { foreignKey: 'orgId' })
 
         await sequelize.sync();
 

@@ -10,6 +10,8 @@ const {Datastore} = require('@google-cloud/datastore');
 const {DatastoreStore} = require('@google-cloud/connect-datastore');
 
 var Initialization = require("./initialization")
+const cors = require('cors'); // Import the cors package
+
 
 
 const port = process.env.PORT;
@@ -21,6 +23,13 @@ ejs.close = '}}';
 
 
 var app = express();
+
+app.use(cors({
+  origin: '*', // Allow only this origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow only these methods
+  allowedHeaders: '*', // Allow only these headers
+  credentials: true // Allow credentials (cookies, HTTP authentication)
+}));
 
 //Consider all request as application/json
 app.use(express.json({type: '*/*'}));
@@ -64,10 +73,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  //next(createError(404));
 });
 
 // error handler
+/*
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -78,6 +88,7 @@ app.use(function(err, req, res, next) {
 
   res.setHeader('Strict-Transport-Security', 'max-age=10886400; includeSubDomains')
 });
+*/
 
 
 app.listen(port)
